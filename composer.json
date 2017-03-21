@@ -1,0 +1,23 @@
+{
+    "name": "rafaelqueiroz/omnipay-mercadopago",
+    "type": "library",
+    "description": "MercadoPago gateway for OmniPay",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Rafael Queiroz",
+            "email": "rafaelfqf@gmail.com"
+        }
+    ],
+    "require": {
+        "omnipay/common": "~2.0"
+    },
+    "require-dev": {
+        "omnipay/tests": "~2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Omnipay\\MercadoPago\\": "src/"
+        }
+    }
+}
