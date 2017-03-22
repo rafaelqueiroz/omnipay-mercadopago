@@ -114,6 +114,29 @@ class Gateway extends AbstractGateway
     }
 
     /**
+     * @param string $class
+     * @param array $parameters
+     * @return \Omnipay\Common\Message\AbstractRequest
+     */
+    public function createRequest($class, array $parameters)
+    {
+        $this->httpClient->getEventDispatcher()->addListener(
+            'request.error',
+            function ($event) {
+                if ($event['response']->isClientError()) {
+                    $event->stopPropagation();
+                }
+            }
+        );
+
+        if (!$this->hasToken() && $class != \Omnipay\MercadoPago\Message\TokenRequest::class) {
+            $this->getToken();
+        }
+
+        return parent::createRequest($class, $parameters);
+    }
+
+    /**
      * @link https://www.mercadopago.com.br/developers/en/api-docs/basics/authentication/
      * @return \Omnipay\MercadoPago\Message\TokenRequest
      */
@@ -123,17 +146,12 @@ class Gateway extends AbstractGateway
     }
 
     /**
-     * @param string $class
-     * @param array $parameters
-     * @return \Omnipay\Common\Message\AbstractRequest
+     * @link https://www.mercadopago.com.br/developers/en/api-docs/basic-checkout/checkout-preferences/
+     * @return \Omnipay\MercadoPago\Message\CreatePreferenceRequest
      */
-    public function createRequest($class, array $parameters)
+    public function createPreference(array $options = array())
     {
-        if (!$this->hasToken() && $class != \Omnipay\MercadoPago\Message\TokenRequest::class) {
-            $this->getToken();
-        }
-
-        return parent::createRequest($class, $parameters);
+        return $this->createRequest(\Omnipay\MercadoPago\Message\CreatePreferenceRequest::class, $options);
     }
 
 }

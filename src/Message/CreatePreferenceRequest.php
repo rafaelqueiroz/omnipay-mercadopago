@@ -21,7 +21,7 @@ namespace Omnipay\MercadoPago\Message;
 /**
  * @author Rafael Queiroz <rafaelfqf@gmail.com>
  */
-class TokenRequest extends AbstractRequest
+class CreatePreferenceRequest extends AbstractRequest
 {
 
     /**
@@ -29,38 +29,34 @@ class TokenRequest extends AbstractRequest
      */
     public function getEndpoint()
     {
-        return parent::getEndpoint() . "/oauth/token";
+        return parent::getEndpoint() . "/checkout/preferences";
     }
 
     /**
      * @return array
      */
-    public function getData()
-    {
-        return [
-            'grant_type' => 'client_credentials',
-            'client_id' => $this->getClientId(),
-            'client_secret' => $this->getClientSecret()
+    public function getData() {
+        $data = [
+            'items' => $this->getItems(),
         ];
+
+        return $data;
     }
 
     /**
-     * Send the request with specified data
-     *
-     * @param  mixed $data The data to send
-     * @return ResponseInterface
+     * @return mixed
      */
-    public function sendData($data)
+    public function getItems()
     {
-        $headers = [
-            'headers' => [
-                'Accept' => 'application/json',
-                'Content-Type' => 'application/x-www-form-urlencoded',
-            ]
-        ];
+        return $this->getParameter('items');
+    }
 
-        $request = $this->httpClient->post($this->getEndpoint(), $headers, $data)->send();
-        return $this->response = new Response($this, $request->json());
+    /**
+     * @param array
+     */
+    public function setItems($items)
+    {
+        return $this->setParameter('items', $items);
     }
 
 }

@@ -31,7 +31,7 @@ class Response extends AbstractResponse
      */
     public function isSuccessful()
     {
-        return $this->getCode() < 400;
+        return empty ($this->data['error']) && $this->getCode() < 400;
     }
 
 }

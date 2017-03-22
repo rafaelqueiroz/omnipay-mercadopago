@@ -98,7 +98,7 @@ class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
      */
     public function getData()
     {
-        return $this->httpClient->get($this->getEndpoint());
+        return ['access_token' => $this->getToken()];
     }
 
     /**
@@ -110,13 +110,13 @@ class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     public function sendData($data)
     {
         $headers = [
-            'headers' => [
-                'Accept' => 'application/json',
-                'Content-Type' => 'application/x-www-form-urlencoded',
-            ]
+            'Content-Type' => 'application/json',
         ];
 
-        $request = $this->httpClient->post($this->getEndpoint(), $headers, $data)->send();
+        $url = $this->getEndpoint() . "?access_token=" . $this->getToken();
+        $request = $this->httpClient->post($url, $headers, json_encode($data))->send();
+
         return $this->response = new Response($this, $request->json());
     }
+
 }
